@@ -1,20 +1,18 @@
 {
-  "name": "sensors",
+  "name": "deploy",
   "version": "1.0.0",
-  "description": "sample app for using mysql with node ",
-  "main": "sensors.js",
+  "description": "remote-real-time-signal-monitoring",
+  "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon sensors.js "
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.19.2",
-    "cors": "2.8.1",
+    "cors": "^2.8.5",
     "express": "^4.17.3",
-    "mysql": "^2.18.1",
-    "nodemon": "^2.0.15",
-    "pug": "^3.0.2"
+    "sqlite3": "^5.0.2"
   }
 }
