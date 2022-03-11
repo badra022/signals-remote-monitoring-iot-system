@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Fetch from Azoz API - GET latest 20 reading</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+  </head>
+  <body>
+    <h1>Temperature - Humidity</h1>
+
+    <canvas id="myChart" width="400" height="200"></canvas>
+
+    <script>
+
+      /* TODO: 
+        1. parse the time to h:m:s -> done
+        2. reverse arrays -> done
+        =============================================
+        3. put controls toggle temp and humodity charts
+        4. update the graph every 1s  (from server fun setInterval)
+        5. post sensor data to addsensors(add to DB)
+        */
+      let mychart;
+
+
+      window.addEventListener('load', setupChart);
+
+      async function setupChart() {
+        var ctx = document.getElementById('myChart').getContext('2d');
+      
+        // const readings = await getData();
+        // console.log(readings)
+        myChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: 'Temperature',
+                data: [],
+                fill: false,
+                borderColor: 'rgba(255, 99, 132, 1)',
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderWidth: 1
+              },
+              {
+                label: 'Humidity',
+                data: [],
+                fill: false,
+                borderColor: 'rgba(99, 132, 255, 1)',
+                backgroundColor: 'rgba(99, 132, 255, 0.5)',
+                borderWidth: 1
+              }
+            ]
+          },
+          options: {}
+        });
+      }
+
+      const api_url = 'http://localhost:3000/getsensors';
+
+      async function getData() {
+        const response = await fetch(api_url);
+        const data = await response.json();
+        
+        let tempretureReadings = [];
+        let humidityReadings = [];
+        let timestamps = [];            /* update the two readings simaltineously in the api -> one T array   */ 
+        
+        for (var entry in data) {
+          if(entry.id == 1){
+            tempretureReadings.push(entry.value);
+          }
+          else{
+            humidityReadings.push(entry.value);
+          }
+            timestamps.push((entry.InDtTm).substr(11, 12) ); 
+        }
+        id1.reverse() 
+        id2.reverse()
+        t1.reverse()
+        return { tempretureReadings , humidityReadings, timestamps };
+      }
+
+      function updateChart() {
+
+
+        // add the values to the chart
+          myChart.data.labels.shift()
+          myChart.data.datasets[0].data.shift()
+          myChart.data.datasets[1].data.shift()
+          
+          myChart.data.labels.push(id);
+          myChart.data.datasets[0].data.push(temperature);
+          myChart.data.datasets[1].data.push(humidity);
+
+          myChart.update();
+          console.log('new data added to chart')
+      }
+
+
+      // setInterval(updateChart, 1000); /* Callback to fetch the lat and lon every 1S */
+
+    </script>
+  </body>
+</html>
